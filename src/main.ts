@@ -1,6 +1,8 @@
-import { app, BrowserWindow } from 'electron'
+import {app, BrowserWindow, Menu} from 'electron'
 declare const REACT_APP_WEBPACK_ENTRY: string;
 declare const REACT_APP_PRELOAD_WEBPACK_ENTRY: string;
+
+const onlineEntry = 'https://google.com';
 
 function createWindow() {
   // Create the browser window.
@@ -19,8 +21,22 @@ function createWindow() {
   // Electron Forge entry point ⤵
   mainWindow.loadURL(REACT_APP_WEBPACK_ENTRY);
 
+  Menu.setApplicationMenu(Menu.buildFromTemplate([
+    {
+      label: 'local react app',
+      click: () => mainWindow.loadURL(REACT_APP_WEBPACK_ENTRY)
+    },
+    {
+      label: 'online app',
+      click: () => {
+        mainWindow.webContents.executeJavaScript(`document.getElementById("root").remove()`);
+        mainWindow.loadURL(onlineEntry)
+      }
+    }
+  ]));
+
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools();
 }
 
 app.whenReady().then(createWindow)
