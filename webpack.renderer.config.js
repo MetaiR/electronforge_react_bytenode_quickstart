@@ -1,10 +1,15 @@
 const rules = require('./webpack.rules');
 const plugins = require('./webpack.plugins');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const inDev = process.env.NODE_ENV !== 'production';
 
 rules.push({
   test: /\.scss$/,
-  use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+  use: [
+     inDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+    'css-loader',
+    'sass-loader'
+  ],
 });
 
 /** @type {import(‘@types/webpack’).Configuration} */
